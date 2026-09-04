@@ -210,7 +210,7 @@ export async function buildCharacterBible(script: string): Promise<string> {
           { role: "system", content: system },
           { role: "user", content: `SCRIPT OPENING:\n${sampleAt(budget)}` },
         ],
-        { maxTokens: 1200, timeoutMs: 90_000, attempts: 2, slot: i },
+        { maxTokens: 1200, timeoutMs: 180_000, attempts: 2, slot: i },
       );
       const bible = stripFences(out).slice(0, 2400);
       if (bible.length > 20) return bible;
@@ -381,7 +381,7 @@ export async function analyzeChunk(
       {
         temperature: 0.4,
         maxTokens: 500 + segments.length * 100,
-        timeoutMs: 90_000,
+        timeoutMs: 180_000,
         attempts: 2,
         slot,
       },
@@ -432,7 +432,7 @@ export async function writePrompts(
         maxTokens: 500 + segs.length * 320,
         // Small batches answer in a few seconds; a call that hangs longer is
         // stuck, so fail over to another key instead of blocking the wave.
-        timeoutMs: 60_000,
+        timeoutMs: 180_000,
         attempts: 3,
         slot: s,
       },
@@ -1056,7 +1056,7 @@ export async function reviewPanel(
             `SCRIPT LINE:\n${line}\n\nRENDERED PROMPT:\n${prompt}`,
         },
       ],
-      { temperature: 0.3, maxTokens: 600, attempts: 2, timeoutMs: 60_000, slot },
+      { temperature: 0.3, maxTokens: 600, attempts: 2, timeoutMs: 180_000, slot },
     );
     const text = stripFences(out).trim();
     if (!text || /^ok\b/i.test(text) || text.length < 40) return null;
